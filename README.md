@@ -1,6 +1,14 @@
 # DDOS-by-CS
+
+# 简体中文
 ## 如何使用?
-更改服务器IP(域名)  
-更改服务器端口  
-双击后入狱
+输入服务器IP(域名)  
+输入服务器端口  
+然后<kbd>回车</kbd>
 # 请勿用于非法用途
+
+# English
+## How to use?
+Input IP or domain name of server  
+Input the port of server  
+Then press <kbd>Enter</kbd>
