@@ -4,8 +4,10 @@ using System.Net.Sockets;
 
 class Program {
     static void Main() {
-        string serverIP = "IP";
-        int serverPort = 443;
+        Console.Write("服务器: ");
+        string serverIP = Console.ReadLine();
+        Console.Write("端口: ");
+        int serverPort = Int32.Parse(Console.ReadLine());
         TcpClient client = new TcpClient();
         client.Connect(serverIP, serverPort);
         NetworkStream stream = client.GetStream();
