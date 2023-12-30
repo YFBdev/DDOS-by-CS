@@ -5,10 +5,12 @@
 输入服务器IP(域名)  
 输入服务器端口  
 然后<kbd>回车</kbd>
-# 请勿用于非法用途
 
 # English
 ## How to use?
-Input IP or domain name of server  
-Input the port of server  
-Then press <kbd>Enter</kbd>
+Input IP or domain name of server.  
+Input the port of server.  
+Then press <kbd>Enter</kbd>.
+
+# 请勿用于非法用途
+# DO NOT USE FOR ILLEGAL PUEPOSES.
