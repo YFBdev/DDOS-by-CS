@@ -1,4 +1,4 @@
-# DDOS-by-CS
+# DDOS-by-CS(A DDoS programing by CSharp)
 
 # 简体中文
 ## 如何使用?
