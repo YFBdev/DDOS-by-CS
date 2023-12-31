@@ -4,14 +4,13 @@ using System.Net.Sockets;
 
 class Program {
     static void Main() {
-        int number;
         Console.Write("服务器    |  Server: ");
         string serverIP = Console.ReadLine();
+        int serverPort;
         while (true) {
             Console.Write("端口      |  Port  : ");
-            string InputPort = Console.ReadLine();
-            if (int.TryParse(InputPort, out number)) {
-                int serverPort = Int32.Parse(InputPort);
+            string inputPort = Console.ReadLine();
+            if (int.TryParse(inputPort, out serverPort)) {
                 try {
                     TcpClient client = new TcpClient();
                     client.Connect(serverIP, serverPort);
@@ -21,9 +20,9 @@ class Program {
                         Console.WriteLine("正在连接服务器  |  Client server.");
                         byte[] buffer = System.Text.Encoding.ASCII.GetBytes("DataDataDataDataDataData");
                         int count = 0;
-                        while(true) {
+                        while (true) {
+                            count++;
                             try {
-                                count++;
                                 stream.Write(buffer, 0, 0);
                                 Console.WriteLine("发了第" + count + "次包");
                             } catch (Exception e) {
@@ -33,7 +32,7 @@ class Program {
                                 continue;
                             }
                         }
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("连接失败.      |  Unable to client to server.");
                         Console.ResetColor();
@@ -50,6 +49,5 @@ class Program {
                 Console.ResetColor();
             }
         }
-        
     }
 }
