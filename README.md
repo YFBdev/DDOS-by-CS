@@ -34,6 +34,7 @@ class Program {
                 Console.ResetColor();
             }
         }
+        reclient:
         TcpClient client = new TcpClient();//定义tpc连接
         try {
             client.Connect(serverIP, serverPort);//连接服务器
@@ -50,12 +51,15 @@ class Program {
             count++;
             try {
                 stream.Write(buffer, 0, 0);
-                Console.WriteLine("发了第" + count + "次包");
+                Console.Write("发了第" + count + "次包");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("成功");
+                Console.ResetColor();
             } catch (Exception e) {//处理错误
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("在发送第" + count + "时发送问题" + e.Message);
                 Console.ResetColor();
-                continue;
+                goto reclient;
             }
         }
     }
