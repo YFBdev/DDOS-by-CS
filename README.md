@@ -11,6 +11,3 @@
 Input IP or domain name of server.  
 Input the port of server.  
 Then press <kbd>Enter</kbd>.
-
-# 请勿用于非法用途
-# DO NOT USE FOR ILLEGAL PUEPOSES.
