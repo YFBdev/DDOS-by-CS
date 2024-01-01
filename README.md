@@ -12,8 +12,8 @@ Input IP or domain name of server.
 Input the port of server.  
 Then press <kbd>Enter</kbd>.
 <hr>
-# GPT的解析：
 
+# GPT的解析：
 # 代码功能解析  
 这段代码是一个简单的 C# 程序，用于与服务器建立 TCP 连接，并发送数据包到服务器。  
 ## 导入命名空间：  
