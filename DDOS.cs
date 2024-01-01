@@ -6,6 +6,7 @@ class Program {
     public static void Main() {
         string serverIP;
         int serverPort;
+        int count = 0;
         Console.Write("服务器    |  Server: ");//要求输入服务寄地址
         serverIP = Console.ReadLine();
         while (true) {//要求输入端口,并检测
@@ -30,7 +31,6 @@ class Program {
         }
         NetworkStream stream = client.GetStream();//获取流
         byte[] buffer = System.Text.Encoding.ASCII.GetBytes("DataDataDataDataDataData");
-        int count = 0;
         while (true) {//开始发包
             count++;
             try {
