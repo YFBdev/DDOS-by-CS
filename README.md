@@ -37,6 +37,7 @@ Main 方法是程序的入口点。
 ```CSharp
 string serverIP;
 int serverPort;
+int count = 0;
 Console.Write("服务器    |  Server: ");
 serverIP = Console.ReadLine();
 while (true) {
