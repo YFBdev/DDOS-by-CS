@@ -34,7 +34,7 @@ class Program {
         while (true) {//开始发包
             count++;
             try {
-                stream.Write(buffer, 0, 0);
+                stream.Write(buffer, 0, buffer.Length);
                 Console.Write("发了第" + count + "次包");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("成功");
