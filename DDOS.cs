@@ -41,9 +41,6 @@ class Program {
             Console.WriteLine("服务器连接失败  |  Unable to connect to server.");
             Console.ResetColor();
         }
-        Console.Clear();
-        Console.ResetColor();
-        Console.Write("发包 | Send Package  T =\u0020");
         NetworkStream stream = client.GetStream();
         int sizeInBytes = 1024 * 1024;
         string randomString = GenerateRandomString(sizeInBytes);
@@ -51,11 +48,11 @@ class Program {
         while (true) {
             Program.count++;
             try {
-                Console.SetCursorPosition(26, 0);
-                Console.Write(Program.count + " | 状态 Staus :");
+                Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write(" Success 成功");
+                Console.Write("Success \u0020");
                 Console.ResetColor();
+                Console.Write(Program.count);
             } catch (Exception e) {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
