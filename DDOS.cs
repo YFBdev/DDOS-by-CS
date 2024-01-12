@@ -49,6 +49,7 @@ class Program {
             Program.count++;
             try {
                 Console.Clear();
+                stream.Write(data, 0, data.Length);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write("Success \u0020");
                 Console.ResetColor();
