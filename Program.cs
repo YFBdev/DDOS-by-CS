@@ -52,7 +52,6 @@ class Program
             Console.WriteLine("服务器连接失败  |  Unable to connect to server.");
             Console.ResetColor();
         }
-        socket.Connect(serverIP, serverPort);
         socket.Send(new byte[] { 0x05, 0x01, 0x00 });
         int sizeInBytes = 1024 * 1024;
         string randomString = GenerateRandomString(sizeInBytes);
