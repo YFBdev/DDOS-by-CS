@@ -40,10 +40,10 @@ class Program
         string serverIP = Program.IP;
         int serverPort = Program.Port;
         reclient:
-        Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         try
         {
-            client.Connect(serverIP, serverPort);
+            socket.Connect(serverIP, serverPort);
             Console.WriteLine("服务器连接成功  |  Connect success.");
         }
         catch (Exception e)
