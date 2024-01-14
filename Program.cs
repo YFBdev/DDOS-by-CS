@@ -65,24 +65,27 @@ class Program
         }
         string randomString = GenerateRandomString(2048);
         byte[] data = Encoding.UTF8.GetBytes(randomString);
+        Console.Clear();
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("OK");
+        Console.ResetColor();
+        Console.Write("\u0020time =");
         while (true)
         {
             Program.count++;
             try
             {
                 socket.Send(data);
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("OK");
-                Console.ResetColor();
-                Console.Write("\u0020time =\u0020" + Program.count);
+                Console.SetCursorPosition(11, 0);
+                Console.Write(Program.count);
             }
             catch (Exception e)
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("错误: ERROR At\u0020" + Program.count + "\u0020turns. Message:\u0020" + e.Message);
+                Console.WriteLine("错误: ERROR At\u0020" + Program.count + "\u0020turns. Message:\u0020" + e.Message);
                 Console.ResetColor();
+                socket.Shutdown(SocketShutdown.Receive);
                 goto reclient;
             }
         }
