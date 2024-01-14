@@ -15,7 +15,7 @@ class Program
         Console.Clear();
         Console.Write("服务器 |  Server: ");
         bool isDomainName = false;
-        string DomainPattern = @"^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$";
+        string DomainPattern = @"^(?:[a-zA-Z0-9](?:[a-zA-Z0-9]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z0-9]{0,}$";
         Regex ymregex = new Regex(DomainPattern);
         while (!isDomainName)
         {
@@ -65,25 +65,23 @@ class Program
         }
         string randomString = GenerateRandomString(2048);
         byte[] data = Encoding.UTF8.GetBytes(randomString);
-        Console.Clear();
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.Write("OK");
-        Console.ResetColor();
-        Console.Write("\u0020time =");
         while (true)
         {
             Program.count++;
             try
             {
                 socket.Send(data);
-                Console.SetCursorPosition(11, 0);
-                Console.Write(Program.count);
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("OK");
+                Console.ResetColor();
+                Console.Write("\u0020time ="+Program.count);
             }
             catch (Exception e)
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("错误: ERROR At\u0020" + Program.count + "\u0020turns. Message:\u0020" + e.Message);
+                Console.Write("错误: ERROR At\u0020" + Program.count + "\u0020turns. Message:\u0020" + e.Message);
                 Console.ResetColor();
                 socket.Shutdown(SocketShutdown.Receive);
                 goto reclient;
