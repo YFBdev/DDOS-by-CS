@@ -75,6 +75,8 @@ class Program
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write("错误: ERROR At\u0020" + count + "\u0020turns.");
                 Console.ResetColor();
+                socket = null;
+                isErr = 0;
                 goto reclient;
             }
         }
